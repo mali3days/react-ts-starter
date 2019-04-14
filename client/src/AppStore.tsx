@@ -7,9 +7,6 @@ export interface Todo {
   id: number;
   title: string;
   completed: boolean;
-  // type: any;
-  // props: any;
-  // key: any;
 }
 
 export class Store {
@@ -18,10 +15,10 @@ export class Store {
   @action
   public getWords = async (): Promise<void> => {
     try {
-      const { data } = await axios.get<Todo[]>(
-        'https://jsonplaceholder.typicode.com/todos?_limit=3',
+      const { data } = await axios.get<{ data: { list: Todo[] } }>(
+        'http://localhost:8080/todo?query={list{id,userId,title,completed}}',
       );
-      this.words = data;
+      this.words = data.data.list;
     } catch (error) {
       console.error(error);
     }
