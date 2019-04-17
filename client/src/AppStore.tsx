@@ -16,7 +16,7 @@ export class Store {
   public getWords = async (): Promise<void> => {
     try {
       const { data } = await axios.get<{ data: { list: Todo[] } }>(
-        'http://localhost:8080/todo?query={list{id,userId,title,completed}}',
+        'http://localhost:8080/graphql?query={list{id,userId,title,completed}}',
       );
       this.words = data.data.list;
     } catch (error) {

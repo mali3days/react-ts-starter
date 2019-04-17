@@ -44,7 +44,7 @@ var queryType = graphql.NewObject(
 		Name: "Query",
 		Fields: graphql.Fields{
 			/* Get (read) single todo by id
-			   http://localhost:8080/todo?query={todo(id:1){title,userId,completed}}
+			   http://localhost:8080/graphql?query={todo(id:1){title,userId,completed}}
 			*/
 			"todo": &graphql.Field{
 				Type:        todoType,
@@ -68,7 +68,7 @@ var queryType = graphql.NewObject(
 				},
 			},
 			/* Get (read) todo list
-			   http://localhost:8080/todo?query={list{id,userId,title,completed}}
+			   http://localhost:8080/graphql?query={list{id,userId,title,completed}}
 			*/
 			"list": &graphql.Field{
 				Type:        graphql.NewList(todoType),
@@ -84,7 +84,7 @@ var mutationType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Mutation",
 	Fields: graphql.Fields{
 		/* Create new todo item
-		http://localhost:8080/todo?query=mutation+_{create(name:"Inca Kola",info:"Inca Kola is a soft drink that was created in Peru in 1935 by British immigrant Joseph Robinson Lindley using lemon verbena (wiki)",price:1.99){id,name,info,price}}
+		http://localhost:8080/graphql?query=mutation+_{create(name:"Inca Kola",info:"Inca Kola is a soft drink that was created in Peru in 1935 by British immigrant Joseph Robinson Lindley using lemon verbena (wiki)",price:1.99){id,name,info,price}}
 		*/
 		"create": &graphql.Field{
 			Type:        todoType,
@@ -114,7 +114,7 @@ var mutationType = graphql.NewObject(graphql.ObjectConfig{
 		},
 
 		/* Update todo by id
-		   http://localhost:8080/todo?query=mutation+_{update(id:1,userId:5){id,title,userId,completed}}
+		   http://localhost:8080/graphql?query=mutation+_{update(id:1,userId:5){id,title,userId,completed}}
 		*/
 		"update": &graphql.Field{
 			Type:        todoType,
@@ -161,7 +161,7 @@ var mutationType = graphql.NewObject(graphql.ObjectConfig{
 		},
 
 		/* Delete todo by id
-		   http://localhost:8080/todo?query=mutation+_{delete(id:1){id,title,userId,completed}}
+		   http://localhost:8080/graphql?query=mutation+_{delete(id:1){id,title,userId,completed}}
 		*/
 		"delete": &graphql.Field{
 			Type:        todoType,
@@ -240,7 +240,7 @@ func main() {
 
 	todoHandler := http.HandlerFunc(handleTodo)
 
-	http.HandleFunc("/todo", indexHandler(todoHandler))
+	http.HandleFunc("/graphql", indexHandler(todoHandler))
 
 	fmt.Println("Server is running on port 8080")
 	http.ListenAndServe(":8080", nil)
