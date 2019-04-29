@@ -1,4 +1,6 @@
 import * as React from 'react';
+import gql from 'graphql-tag';
+import { useMutation } from 'react-apollo-hooks';
 // import { observer, inject } from 'mobx-react';
 import { observer } from 'mobx-react-lite';
 import TextField from '@material-ui/core/TextField';
@@ -14,15 +16,17 @@ import Typography from '@material-ui/core/Typography';
 import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import { RootStore, Todo } from './AppStore';
+import { getWordsList, QWordsList } from './gql/WordsList';
+
+import { RootStore, Word } from './AppStore';
 import './App.css';
 
 export interface Props {
-  words: Todo[];
+  words: Word[];
 }
 const RenderTodoList: React.FC<Props> = observer(
   ({ words }): JSX.Element => {
-    console.log('RenderTodoList');
+    console.log('RenderWordList');
 
     // https://stackoverflow.com/questions/54679118/jsx-element-type-element-is-not-a-constructor-function-for-jsx-elements
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20356#issuecomment-336384210
@@ -36,7 +40,7 @@ const RenderTodoList: React.FC<Props> = observer(
                   <FolderIcon />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary={w.title} secondary={String(w.completed)} />
+              <ListItemText primary={w.content} secondary={String(w.created_at)} />
               <ListItemSecondaryAction>
                 <IconButton aria-label="Delete">
                   <DeleteIcon />
@@ -50,22 +54,30 @@ const RenderTodoList: React.FC<Props> = observer(
   },
 );
 
+const CREATE_NEW_WORD = gql`
+  mutation createWord($content: String!, $authorId: Int!) {
+    createWord(content: $content, author_id: $authorId) {
+      id
+      content
+    }
+  }
+`;
+
 const TodoList = React.memo(RenderTodoList); // ?
 // const TodoList = RenderTodoList;
 
 export const App: React.FC<{}> = observer(
   (): JSX.Element => {
-    const store = React.useContext(RootStore);
     const [word, setWord] = React.useState('');
-
-    React.useEffect((): void => {
-      store.getWords();
-    }, []);
+    const data = getWordsList();
+    const createNewWord = useMutation(CREATE_NEW_WORD);
 
     const onSubmit = (e: React.SyntheticEvent<HTMLFormElement>): void => {
       e.preventDefault();
-      console.log(word);
-      store.addWord(word);
+      createNewWord({
+        variables: { content: word, authorId: 1 },
+        refetchQueries: [{ query: QWordsList }],
+      });
       setWord('');
     };
 
@@ -100,7 +112,7 @@ export const App: React.FC<{}> = observer(
             <Typography variant="h6">Words to learn: </Typography>
             <div>
               <List dense>
-                <TodoList words={store.words} />
+                <TodoList words={data.words} />
               </List>
             </div>
           </Grid>

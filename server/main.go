@@ -1,216 +1,41 @@
 package main
 
 import (
-	"encoding/json"
+	"database/sql"
 	"fmt"
-	"math/rand"
 	"net/http"
 	"time"
 
 	"github.com/graphql-go/graphql"
+	"github.com/graphql-go/handler"
+	_ "github.com/lib/pq"
 )
 
-type Todo struct {
-	ID        int64  `json:"id"`
-	UserID    int64  `json:"userId"`
-	Title     string `json:"title"`
-	Completed bool   `json:"completed"`
+const (
+	DB_HOST     = "127.0.0.1"
+	DB_PORT     = "5433"
+	DB_USER     = "postgres"
+	DB_PASSWORD = "days"
+	DB_NAME     = "go_graphql_db"
+)
+
+type Author struct {
+	ID        int       `json:"id"`
+	Name      string    `json:"name"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
-var todos []Todo
+type Word struct {
+	ID        int       `json:"id"`
+	Content   string    `json:"content"`
+	AuthorID  int       `json:"author_id"`
+	CreatedAt time.Time `json:"created_at"`
+}
 
-var todoType = graphql.NewObject(
-	graphql.ObjectConfig{
-		Name: "Todo",
-		Fields: graphql.Fields{
-			"id": &graphql.Field{
-				Type: graphql.Int,
-			},
-			"userId": &graphql.Field{
-				Type: graphql.Int,
-			},
-			"title": &graphql.Field{
-				Type: graphql.String,
-			},
-			"completed": &graphql.Field{
-				Type: graphql.Boolean,
-			},
-		},
-	},
-)
-
-var queryType = graphql.NewObject(
-	graphql.ObjectConfig{
-		Name: "Query",
-		Fields: graphql.Fields{
-			/* Get (read) single todo by id
-			   http://localhost:8080/graphql?query={todo(id:1){title,userId,completed}}
-			*/
-			"todo": &graphql.Field{
-				Type:        todoType,
-				Description: "Get todo by id",
-				Args: graphql.FieldConfigArgument{
-					"id": &graphql.ArgumentConfig{
-						Type: graphql.Int,
-					},
-				},
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					id, ok := p.Args["id"].(int)
-					if ok {
-						// Find todo
-						for _, todo := range todos {
-							if int(todo.ID) == id {
-								return todo, nil
-							}
-						}
-					}
-					return nil, nil
-				},
-			},
-			/* Get (read) todo list
-			   http://localhost:8080/graphql?query={list{id,userId,title,completed}}
-			*/
-			"list": &graphql.Field{
-				Type:        graphql.NewList(todoType),
-				Description: "Get todo list",
-				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-					return todos, nil
-				},
-			},
-		},
-	})
-
-var mutationType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Mutation",
-	Fields: graphql.Fields{
-		/* Create new todo item
-		http://localhost:8080/graphql?query=mutation+_{create(name:"Inca Kola",info:"Inca Kola is a soft drink that was created in Peru in 1935 by British immigrant Joseph Robinson Lindley using lemon verbena (wiki)",price:1.99){id,name,info,price}}
-		*/
-		"create": &graphql.Field{
-			Type:        todoType,
-			Description: "Create new todo",
-			Args: graphql.FieldConfigArgument{
-				"name": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphql.String),
-				},
-				"info": &graphql.ArgumentConfig{
-					Type: graphql.String,
-				},
-				"price": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphql.Float),
-				},
-			},
-			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-				rand.Seed(time.Now().UnixNano())
-				todo := Todo{
-					ID:        int64(rand.Intn(100000)), // generate random ID
-					Title:     params.Args["title"].(string),
-					UserID:    params.Args["userId"].(int64),
-					Completed: params.Args["completed"].(bool),
-				}
-				todos = append(todos, todo)
-				return todo, nil
-			},
-		},
-
-		/* Update todo by id
-		   http://localhost:8080/graphql?query=mutation+_{update(id:1,userId:5){id,title,userId,completed}}
-		*/
-		"update": &graphql.Field{
-			Type:        todoType,
-			Description: "Update todo by id",
-			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphql.Int),
-				},
-				"userId": &graphql.ArgumentConfig{
-					Type: graphql.Int,
-				},
-				"title": &graphql.ArgumentConfig{
-					Type: graphql.String,
-				},
-				"completed": &graphql.ArgumentConfig{
-					Type: graphql.Boolean,
-				},
-			},
-			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-				id, _ := params.Args["id"].(int)
-				title, titleOk := params.Args["title"].(string)
-				completed, completedOk := params.Args["completed"].(bool)
-				userID, userIDOk := params.Args["userId"].(int64)
-				// info, infoOk := params.Args["info"].(string)
-				// price, priceOk := params.Args["price"].(float64)
-				todo := Todo{}
-				for i, t := range todos {
-					if int64(id) == t.ID {
-						if titleOk {
-							todos[i].Title = title
-						}
-						if completedOk {
-							todos[i].Completed = completed
-						}
-						if userIDOk {
-							todos[i].UserID = userID
-						}
-						todo = todos[i]
-						break
-					}
-				}
-				return todo, nil
-			},
-		},
-
-		/* Delete todo by id
-		   http://localhost:8080/graphql?query=mutation+_{delete(id:1){id,title,userId,completed}}
-		*/
-		"delete": &graphql.Field{
-			Type:        todoType,
-			Description: "Delete todo by id",
-			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
-					Type: graphql.NewNonNull(graphql.Int),
-				},
-			},
-			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-				id, _ := params.Args["id"].(int)
-				todo := Todo{}
-				for i, p := range todos {
-					if int64(id) == p.ID {
-						todo = todos[i]
-						// Remove from todo list
-						todos = append(todos[:i], todos[i+1:]...)
-					}
-				}
-
-				return todo, nil
-			},
-		},
-	},
-})
-
-var schema, _ = graphql.NewSchema(
-	graphql.SchemaConfig{
-		Query:    queryType,
-		Mutation: mutationType,
-	},
-)
-
-func executeQuery(query string, schema graphql.Schema) *graphql.Result {
-	result := graphql.Do(graphql.Params{
-		Schema:        schema,
-		RequestString: query,
-	})
-	if len(result.Errors) > 0 {
-		fmt.Printf("errors: %v", result.Errors)
+func checkErr(err error) {
+	if err != nil {
+		panic(err)
 	}
-	return result
-}
-
-func initTodosData(p *[]Todo) {
-	todo1 := Todo{ID: 1, Title: "Chicha Morada", UserID: 1, Completed: true}
-	todo2 := Todo{ID: 2, Title: "Chicha de jora", UserID: 2, Completed: false}
-	todo3 := Todo{ID: 3, Title: "Pisco", UserID: 3, Completed: true}
-	*p = append(*p, todo1, todo2, todo3)
 }
 
 func setupResponse(w *http.ResponseWriter, req *http.Request) {
@@ -229,19 +54,367 @@ func indexHandler(next http.Handler) http.HandlerFunc {
 	}
 }
 
-func handleTodo(w http.ResponseWriter, r *http.Request) {
-	result := executeQuery(r.URL.Query().Get("query"), schema)
-	json.NewEncoder(w).Encode(result)
-}
-
 func main() {
-	// Primary data initialization
-	initTodosData(&todos)
+	dbinfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME)
+	db, err := sql.Open("postgres", dbinfo)
+	checkErr(err)
 
-	todoHandler := http.HandlerFunc(handleTodo)
+	defer db.Close()
 
-	http.HandleFunc("/graphql", indexHandler(todoHandler))
+	authorType := graphql.NewObject(graphql.ObjectConfig{
+		Name:        "Author",
+		Description: "An author",
+		Fields: graphql.Fields{
+			"id": &graphql.Field{
+				Type:        graphql.NewNonNull(graphql.Int),
+				Description: "The identifier of the author.",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if author, ok := p.Source.(*Author); ok {
+						return author.ID, nil
+					}
 
-	fmt.Println("Server is running on port 8080")
+					return nil, nil
+				},
+			},
+			"name": &graphql.Field{
+				Type:        graphql.NewNonNull(graphql.String),
+				Description: "The name of the author.",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if author, ok := p.Source.(*Author); ok {
+						return author.Name, nil
+					}
+
+					return nil, nil
+				},
+			},
+			"created_at": &graphql.Field{
+				Type:        graphql.NewNonNull(graphql.String),
+				Description: "The created_at date of the author.",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if author, ok := p.Source.(*Author); ok {
+						return author.CreatedAt, nil
+					}
+
+					return nil, nil
+				},
+			},
+		},
+	})
+
+	wordType := graphql.NewObject(graphql.ObjectConfig{
+		Name:        "Word",
+		Description: "A Word",
+		Fields: graphql.Fields{
+			"id": &graphql.Field{
+				Type:        graphql.NewNonNull(graphql.Int),
+				Description: "The identifier of the word.",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if word, ok := p.Source.(*Word); ok {
+						return word.ID, nil
+					}
+
+					return nil, nil
+				},
+			},
+			"content": &graphql.Field{
+				Type:        graphql.NewNonNull(graphql.String),
+				Description: "The content of the word.",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if word, ok := p.Source.(*Word); ok {
+						return word.Content, nil
+					}
+
+					return nil, nil
+				},
+			},
+			"created_at": &graphql.Field{
+				Type:        graphql.NewNonNull(graphql.String),
+				Description: "The created_at date of the word.",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if word, ok := p.Source.(*Word); ok {
+						return word.CreatedAt, nil
+					}
+
+					return nil, nil
+				},
+			},
+			"author": &graphql.Field{
+				Type: authorType,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					if word, ok := p.Source.(*Word); ok {
+						author := &Author{}
+						err = db.QueryRow("select id, name from words where id = $1", word.AuthorID).Scan(&author.ID, &author.Name)
+						checkErr(err)
+
+						return author, nil
+					}
+
+					return nil, nil
+				},
+			},
+		},
+	})
+
+	rootQuery := graphql.NewObject(graphql.ObjectConfig{
+		Name: "RootQuery",
+		Fields: graphql.Fields{
+			"author": &graphql.Field{
+				Type:        authorType,
+				Description: "Get an author.",
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.Int,
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					id, _ := params.Args["id"].(int)
+
+					author := &Author{}
+					err = db.QueryRow("select id, name, from authors where id = $1", id).Scan(&author.ID, &author.Name)
+					checkErr(err)
+
+					return author, nil
+				},
+			},
+			"authors": &graphql.Field{
+				Type:        graphql.NewList(authorType),
+				Description: "List of authors.",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					rows, err := db.Query("SELECT id, name FROM authors")
+					checkErr(err)
+					var authors []*Author
+
+					for rows.Next() {
+						author := &Author{}
+
+						err = rows.Scan(&author.ID, &author.Name)
+						checkErr(err)
+						authors = append(authors, author)
+					}
+
+					return authors, nil
+				},
+			},
+			"word": &graphql.Field{
+				Type:        wordType,
+				Description: "Get a word.",
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.Int,
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					id, _ := params.Args["id"].(int)
+
+					word := &Word{}
+					err = db.QueryRow("select id, content, author_id from words where id = $1", id).Scan(&word.ID, &word.Content, &word.AuthorID)
+					checkErr(err)
+
+					return word, nil
+				},
+			},
+			"words": &graphql.Field{
+				Type:        graphql.NewList(wordType),
+				Description: "List of words.",
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					rows, err := db.Query("SELECT id, content, author_id FROM words")
+					checkErr(err)
+					var words []*Word
+
+					for rows.Next() {
+						word := &Word{}
+
+						err = rows.Scan(&word.ID, &word.Content, &word.AuthorID)
+						checkErr(err)
+						words = append(words, word)
+					}
+
+					return words, nil
+				},
+			},
+		},
+	})
+
+	rootMutation := graphql.NewObject(graphql.ObjectConfig{
+		Name: "RootMutation",
+		Fields: graphql.Fields{
+			// Author
+			"createAuthor": &graphql.Field{
+				Type:        authorType,
+				Description: "Create new author",
+				Args: graphql.FieldConfigArgument{
+					"name": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					name, _ := params.Args["name"].(string)
+					createdAt := time.Now()
+
+					var lastInsertId int
+					err = db.QueryRow("INSERT INTO authors(name, created_at) VALUES($1, $2) returning id;", name, createdAt).Scan(&lastInsertId)
+					checkErr(err)
+
+					newAuthor := &Author{
+						ID:        lastInsertId,
+						Name:      name,
+						CreatedAt: createdAt,
+					}
+
+					return newAuthor, nil
+				},
+			},
+			"updateAuthor": &graphql.Field{
+				Type:        authorType,
+				Description: "Update an author",
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"name": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					id, _ := params.Args["id"].(int)
+					name, _ := params.Args["name"].(string)
+
+					stmt, err := db.Prepare("UPDATE authors SET name = $1 WHERE id = $2")
+					checkErr(err)
+
+					_, err2 := stmt.Exec(name, id)
+					checkErr(err2)
+
+					newAuthor := &Author{
+						ID:   id,
+						Name: name,
+					}
+
+					return newAuthor, nil
+				},
+			},
+			"deleteAuthor": &graphql.Field{
+				Type:        authorType,
+				Description: "Delete an author",
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.Int,
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					id, _ := params.Args["id"].(int)
+
+					stmt, err := db.Prepare("DELETE FROM authors WHERE id = $1")
+					checkErr(err)
+
+					_, err2 := stmt.Exec(id)
+					checkErr(err2)
+
+					return nil, nil
+				},
+			},
+			// Word
+			"createWord": &graphql.Field{
+				Type:        wordType,
+				Description: "Create new word",
+				Args: graphql.FieldConfigArgument{
+					"content": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"author_id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					content, _ := params.Args["content"].(string)
+					authorId, _ := params.Args["author_id"].(int)
+					createdAt := time.Now()
+
+					var lastInsertId int
+					err = db.QueryRow("INSERT INTO words(content, author_id, created_at) VALUES($1, $2, $3) returning id;", content, authorId, createdAt).Scan(&lastInsertId)
+					checkErr(err)
+
+					newWord := &Word{
+						ID:        lastInsertId,
+						Content:   content,
+						AuthorID:  authorId,
+						CreatedAt: createdAt,
+					}
+
+					return newWord, nil
+				},
+			},
+			"updateWord": &graphql.Field{
+				Type:        wordType,
+				Description: "Update a word",
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"content": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"author_id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					id, _ := params.Args["id"].(int)
+					content, _ := params.Args["content"].(string)
+					authorId, _ := params.Args["author_id"].(int)
+
+					stmt, err := db.Prepare("UPDATE words SET content = $1, author_id = $2 WHERE id = $3")
+					checkErr(err)
+
+					_, err2 := stmt.Exec(content, authorId, id)
+					checkErr(err2)
+
+					newWord := &Word{
+						ID:       id,
+						Content:  content,
+						AuthorID: authorId,
+					}
+
+					return newWord, nil
+				},
+			},
+			"deleteWord": &graphql.Field{
+				Type:        wordType,
+				Description: "Delete a word",
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.Int,
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					id, _ := params.Args["id"].(int)
+
+					stmt, err := db.Prepare("DELETE FROM words WHERE id = $1")
+					checkErr(err)
+
+					_, err2 := stmt.Exec(id)
+					checkErr(err2)
+
+					return nil, nil
+				},
+			},
+		},
+	})
+	schema, _ := graphql.NewSchema(graphql.SchemaConfig{
+		Query:    rootQuery,
+		Mutation: rootMutation,
+	})
+
+	h := handler.New(&handler.Config{
+		Schema:   &schema,
+		Pretty:   true,
+		GraphiQL: true,
+	})
+
+	// serve HTTP
+	// http.Handle("/graphql", h)
+	http.HandleFunc("/graphql", indexHandler(h))
+
 	http.ListenAndServe(":8080", nil)
 }
