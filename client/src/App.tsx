@@ -21,12 +21,21 @@ import { getWordsList, QWordsList } from './gql/WordsList';
 import { RootStore, Word } from './AppStore';
 import './App.css';
 
+const DELETE_WORD_BY_ID = gql`
+  mutation deleteWord($id: Int!) {
+    deleteWord(id: $id) {
+      id
+    }
+  }
+`;
+
 export interface Props {
   words: Word[];
 }
 const RenderTodoList: React.FC<Props> = observer(
   ({ words }): JSX.Element => {
     console.log('RenderWordList');
+    const deleteWordById = useMutation(DELETE_WORD_BY_ID);
 
     // https://stackoverflow.com/questions/54679118/jsx-element-type-element-is-not-a-constructor-function-for-jsx-elements
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20356#issuecomment-336384210
@@ -37,12 +46,18 @@ const RenderTodoList: React.FC<Props> = observer(
             <ListItem key={w.id}>
               <ListItemAvatar>
                 <Avatar>
-                  <FolderIcon />
+                  {/* <FolderIcon /> */}
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdl1rmeMz-SG_9GroHp8ytiXUCEhNHoAjQ6w-Kz1ZajI6JEmI_" alt=""/>
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary={w.content} secondary={String(w.created_at)} />
               <ListItemSecondaryAction>
-                <IconButton aria-label="Delete">
+                <IconButton aria-label="Delete" onClick={() => {
+                  deleteWordById({
+                    variables: { id: w.id },
+                    refetchQueries: [{ query: QWordsList }],
+                  });
+                }}>
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
