@@ -12,7 +12,7 @@
 /client/build
 
 # environment variables for server
-/server/.env
+/server/src/.env
 
 # misc
 .DS_Store

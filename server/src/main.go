@@ -9,10 +9,9 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 	_ "github.com/lib/pq"
-
-	"github.com/m3days/hyperdic/server/server/images"
-	// "server/server/images"
 )
+
+// import "github.com/mali3days/react-ts-starter/server/src/server/images"
 
 const (
 	DB_HOST     = "127.0.0.1"
@@ -58,7 +57,7 @@ func indexHandler(next http.Handler) http.HandlerFunc {
 }
 
 func main() {
-	images.Lala()
+	pixabay.Lala()
 
 	dbinfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME)
