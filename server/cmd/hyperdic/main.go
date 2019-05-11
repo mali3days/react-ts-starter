@@ -9,8 +9,8 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 	_ "github.com/lib/pq"
-	pixabay "github.com/mali3days/react-ts-starter/server/pkg"
-	translate "github.com/mali3days/react-ts-starter/server/pkg"
+	image "github.com/mali3days/react-ts-starter/server/pkg/image"
+	translate "github.com/mali3days/react-ts-starter/server/pkg/translate"
 )
 
 const (
@@ -57,7 +57,7 @@ func indexHandler(next http.Handler) http.HandlerFunc {
 }
 
 func main() {
-	pixabay.Lala()
+	image.Lala()
 	translate.TranslateText("ru", "Hello world")
 
 	dbinfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
