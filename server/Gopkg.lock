@@ -86,14 +86,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:8c8ded2a41c3027462d66777d0ccc71b515ba1073ef6279f1c44edec0e5ba401"
+  digest = "1:672fb4afd8f6ae03d5ca6b8c6c765a05e02909378ff8967464ca18197557a01c"
   name = "github.com/mali3days/react-ts-starter"
   packages = [
     "server/pkg/image",
     "server/pkg/translate",
   ]
   pruneopts = "UT"
-  revision = "7157ca31671d375c81449ecd39e521b0f9840f69"
+  revision = "a6b333e7c616485679a9d45a6cad3bb9287395c7"
 
 [[projects]]
   digest = "1:6a0fd720abef071f9c9821249e2a7ee87a2e90fe7e45cef8fe413e6b5287363a"

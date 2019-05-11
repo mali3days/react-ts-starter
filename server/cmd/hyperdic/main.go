@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -58,7 +59,11 @@ func indexHandler(next http.Handler) http.HandlerFunc {
 
 func main() {
 	image.Lala()
-	translate.TranslateText("ru", "Hello world")
+	text, err := translate.TranslateText("ru", "Hello world")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(text)
 
 	dbinfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME)
