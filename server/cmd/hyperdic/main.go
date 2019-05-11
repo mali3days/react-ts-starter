@@ -10,6 +10,7 @@ import (
 	"github.com/graphql-go/handler"
 	_ "github.com/lib/pq"
 	pixabay "github.com/mali3days/react-ts-starter/server/pkg"
+	translate "github.com/mali3days/react-ts-starter/server/pkg"
 )
 
 const (
@@ -57,6 +58,7 @@ func indexHandler(next http.Handler) http.HandlerFunc {
 
 func main() {
 	pixabay.Lala()
+	translate.CreateClientWithKey()
 
 	dbinfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME)
