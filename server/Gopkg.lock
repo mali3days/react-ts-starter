@@ -73,7 +73,7 @@
   version = "v1.3.0"
 
 [[projects]]
-  digest = "1:bc1c0be40c67b6b4aee09d7508d5a2a52c1c116b1fa43806dad2b0d6b4d4003b"
+  digest = "1:bdd53b87de8185da386bae179c84d4848854c6870bacacf6a154fe63e2e750f7"
   name = "github.com/lib/pq"
   packages = [
     ".",
@@ -81,16 +81,19 @@
     "scram",
   ]
   pruneopts = "UT"
-  revision = "51e2106eed1cea199c802d2a49e91e2491b02056"
-  version = "v1.1.0"
+  revision = "bc6a3c0594130b1e34005880bc600b6d3f49fa7f"
+  version = "v1.1.1"
 
 [[projects]]
   branch = "master"
-  digest = "1:02f5466c30d7b458c4f88ad2279ce428ae83ca0a81d2c268617a07cc219482b6"
+  digest = "1:8c8ded2a41c3027462d66777d0ccc71b515ba1073ef6279f1c44edec0e5ba401"
   name = "github.com/mali3days/react-ts-starter"
-  packages = ["server/pkg"]
+  packages = [
+    "server/pkg/image",
+    "server/pkg/translate",
+  ]
   pruneopts = "UT"
-  revision = "3a347ebefe47501ed799c529774572a77527b0a1"
+  revision = "7157ca31671d375c81449ecd39e521b0f9840f69"
 
 [[projects]]
   digest = "1:6a0fd720abef071f9c9821249e2a7ee87a2e90fe7e45cef8fe413e6b5287363a"
@@ -275,7 +278,8 @@
     "github.com/graphql-go/handler",
     "github.com/joho/godotenv",
     "github.com/lib/pq",
-    "github.com/mali3days/react-ts-starter/server/pkg",
+    "github.com/mali3days/react-ts-starter/server/pkg/image",
+    "github.com/mali3days/react-ts-starter/server/pkg/translate",
     "golang.org/x/text/language",
     "google.golang.org/api/option",
   ]

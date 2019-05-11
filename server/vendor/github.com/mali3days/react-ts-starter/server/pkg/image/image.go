@@ -1,4 +1,4 @@
-package pixabay
+package image
 
 import (
 	"fmt"
