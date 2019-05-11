@@ -11,7 +11,7 @@ import (
 	"google.golang.org/api/option"
 )
 
-func CreateClientWithKey() {
+func main() {
 	// import "cloud.google.com/go/translate"
 	// import "google.golang.org/api/option"
 	// import "golang.org/x/text/language"
@@ -32,8 +32,7 @@ func CreateClientWithKey() {
 }
 
 // [START translate_translate_text]
-
-func translateText(targetLanguage, text string) (string, error) {
+func TranslateText(targetLanguage, text string) (string, error) {
 	ctx := context.Background()
 
 	lang, err := language.Parse(targetLanguage)
