@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 
 	"cloud.google.com/go/translate"
 	"golang.org/x/text/language"
@@ -17,11 +18,13 @@ func main() {
 	// import "golang.org/x/text/language"
 	ctx := context.Background()
 
-	const apiKey = "AIzaSyBYKupQPuoSdS6cysM5u864N1vBSf9OKcA"
-	client, err := translate.NewClient(ctx, option.WithAPIKey(apiKey))
+	// const apiKey = "AIzaSyBYKupQPuoSdS6cysM5u864N1vBSf9OKcA"
+	// client, err := translate.NewClient(ctx, option.WithAPIKey(apiKey))
+	client, err := translate.NewClient(ctx)
 	if err != nil {
 		log.Fatal("Failed to create client: %v", err)
 	}
+	// defer client.Close()
 
 	resp, err := client.Translate(ctx, []string{"Hello, world!"}, language.Russian, nil)
 	if err != nil {
@@ -39,6 +42,8 @@ func TranslateText(targetLanguage, text string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
+	fmt.Println("FOO:", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"))
 
 	client, err := translate.NewClient(ctx)
 	if err != nil {
