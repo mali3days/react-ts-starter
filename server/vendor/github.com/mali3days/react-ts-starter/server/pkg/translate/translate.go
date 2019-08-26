@@ -5,23 +5,29 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 
 	"cloud.google.com/go/translate"
 	"golang.org/x/text/language"
-	"google.golang.org/api/option"
+	// "google.golang.org/api/option"
 )
 
 func main() {
 	// import "cloud.google.com/go/translate"
 	// import "google.golang.org/api/option"
 	// import "golang.org/x/text/language"
+
+	// os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", "C:/projects/src/hyperdic/server/hyperdic-d02647eebf1c.json")
+
 	ctx := context.Background()
 
-	const apiKey = "AIzaSyBYKupQPuoSdS6cysM5u864N1vBSf9OKcA"
-	client, err := translate.NewClient(ctx, option.WithAPIKey(apiKey))
+	// const apiKey = "AIzaSyBYKupQPuoSdS6cysM5u864N1vBSf9OKcA"
+	// client, err := translate.NewClient(ctx, option.WithAPIKey(apiKey))
+	client, err := translate.NewClient(ctx)
 	if err != nil {
 		log.Fatal("Failed to create client: %v", err)
 	}
+	// defer client.Close()
 
 	resp, err := client.Translate(ctx, []string{"Hello, world!"}, language.Russian, nil)
 	if err != nil {
@@ -33,6 +39,10 @@ func main() {
 
 // [START translate_translate_text]
 func TranslateText(targetLanguage, text string) (string, error) {
+	// translate works only with the GOOGLE_APPLICATION_CREDENTIALS env variable.
+	os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", "C:/projects/src/hyperdic/server/hyperdic-d02647eebf1c.json")
+	fmt.Println("FOO:", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"))
+
 	ctx := context.Background()
 
 	lang, err := language.Parse(targetLanguage)

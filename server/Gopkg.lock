@@ -11,8 +11,8 @@
     "translate/internal/translate/v2",
   ]
   pruneopts = "UT"
-  revision = "8c41231e01b2085512d98153bcffb847ff9b4b9f"
-  version = "v0.38.0"
+  revision = "cf81fad90a1a1de334c4fc27e23eb9a4224b627a"
+  version = "v0.41.0"
 
 [[projects]]
   digest = "1:239c4c7fd2159585454003d9be7207167970194216193a8a210b8d29576f19c9"
@@ -86,17 +86,17 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:672fb4afd8f6ae03d5ca6b8c6c765a05e02909378ff8967464ca18197557a01c"
+  digest = "1:12b5633954794cd3c208d04d28c090897a819860363091ad2f8d9704a3b7b7b9"
   name = "github.com/mali3days/react-ts-starter"
   packages = [
     "server/pkg/image",
     "server/pkg/translate",
   ]
   pruneopts = "UT"
-  revision = "a6b333e7c616485679a9d45a6cad3bb9287395c7"
+  revision = "abb8d0424c2682357a48ba5cc6ccb738cbe809a1"
 
 [[projects]]
-  digest = "1:6a0fd720abef071f9c9821249e2a7ee87a2e90fe7e45cef8fe413e6b5287363a"
+  digest = "1:74055050ea547bb04600be79cc501965cb3de8988018262f2ca430f0a0b48ec3"
   name = "go.opencensus.io"
   packages = [
     ".",
@@ -117,12 +117,12 @@
     "trace/tracestate",
   ]
   pruneopts = "UT"
-  revision = "df6e2001952312404b06f5f6f03fcb4aec1648e5"
-  version = "v0.21.0"
+  revision = "9c377598961b706d1542bd2d84d538b5094d596e"
+  version = "v0.22.0"
 
 [[projects]]
   branch = "master"
-  digest = "1:f04f91f699638081f3d9659950764321bc0602076fc5fd8177c18b185ad3fdd8"
+  digest = "1:2f357867bf425774d35beca5be718402a4488b8b23b1563ce8c5bb91d09285a7"
   name = "golang.org/x/net"
   packages = [
     "context",
@@ -135,11 +135,11 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "a4d6f7feada510cc50e69a37b484cb0fdc6b7876"
+  revision = "da137c7871d730100384dbcf36e6f8fa493aef5b"
 
 [[projects]]
   branch = "master"
-  digest = "1:645cb780e4f3177111b40588f0a7f5950efcfb473e7ff41d8d81b2ba5eaa6ed5"
+  digest = "1:31e33f76456ccf54819ab4a646cf01271d1a99d7712ab84bf1a9e7b61cd2031b"
   name = "golang.org/x/oauth2"
   packages = [
     ".",
@@ -149,15 +149,15 @@
     "jwt",
   ]
   pruneopts = "UT"
-  revision = "9f3314589c9a9136388751d9adae6b0ed400978a"
+  revision = "0f29369cfe4552d0e4bcddc57cc75f4d7e672a33"
 
 [[projects]]
   branch = "master"
-  digest = "1:4fc43e824f7e546353de724c00507b1d9c0bab56344b10c2330a97f166a0fba7"
+  digest = "1:730ba27cd66db3b98ec8f51a6f20d45ec277d490cca36b1f54e31d3fcaf4840e"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "a5b02f93d862f065920dd6a40dddc66b60d0dec4"
+  revision = "04f50cda93cbb67f2afa353c52f342100e80e625"
 
 [[projects]]
   digest = "1:8d8faad6b12a3a4c819a3f9618cb6ee1fa1cfc33253abeeea8b55336721e3405"
@@ -198,11 +198,11 @@
     "transport/http/internal/propagation",
   ]
   pruneopts = "UT"
-  revision = "721295fe20d585ce7e948146f82188429d14da33"
-  version = "v0.5.0"
+  revision = "02490b97dff7cfde1995bd77de808fd27053bc87"
+  version = "v0.7.0"
 
 [[projects]]
-  digest = "1:04f2ff15fc59e1ddaf9900ad0e19e5b19586b31f9dafd4d592b617642b239d8f"
+  digest = "1:498b722d33dde4471e7d6e5d88a5e7132d2a8306fea5ff5ee82d1f418b4f41ed"
   name = "google.golang.org/appengine"
   packages = [
     ".",
@@ -217,19 +217,19 @@
     "urlfetch",
   ]
   pruneopts = "UT"
-  revision = "54a98f90d1c46b7731eb8fb305d2a321c30ef610"
-  version = "v1.5.0"
+  revision = "b2f4a3cf3c67576a2ee09e1fe62656a5086ce880"
+  version = "v1.6.1"
 
 [[projects]]
   branch = "master"
-  digest = "1:fc5df4cb84cdf639ef702c176a50a9ee08ea3e68ebd67519c0f4f963c7d82978"
+  digest = "1:583a0c80f5e3a9343d33aea4aead1e1afcc0043db66fdf961ddd1fe8cd3a4faf"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "b515fa19cec88c32f305a962f34ae60068947aea"
+  revision = "3bdd9d9f5532d75d09efb230bd767d265245cfe5"
 
 [[projects]]
-  digest = "1:707c3a5d10ed430ea767d73df122d9eb3dfb6312bbacc9f2e39204390686d1d0"
+  digest = "1:cf01ae0753310464677058b125fa31e74fd943781782ada503180ad784fc83d3"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -261,13 +261,14 @@
     "resolver",
     "resolver/dns",
     "resolver/passthrough",
+    "serviceconfig",
     "stats",
     "status",
     "tap",
   ]
   pruneopts = "UT"
-  revision = "25c4f928eaa6d96443009bd842389fb4fa48664e"
-  version = "v1.20.1"
+  revision = "1d89a3c832915b2314551c1d2a506874d62e53f7"
+  version = "v1.22.0"
 
 [solve-meta]
   analyzer-name = "dep"

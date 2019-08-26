@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "hyperdic",
+  "private_key_id": "d02647eebf1c8ac1ad3ac96389d39d6350b71363",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC5Qj73fEbOWgDQ\n44ZfNBD+f+sJLyl3gBK7fs6TN1Z1wYdCpnMLVoTTPU1PrRyvhvtUG8aFWs5+tyNU\nCuDmlMs7lyQyuzDjjACNyrP9MVKgMlU+N23EDsW94GECwCEMnoeDaVotKA1T7Q0T\nJ8Ifivu53iJKGr+IA7v1gAHkOjbVJrGnA3M8ZXhyrrwHPw1Db3JENraq/+ge744l\n3LJLYJwPPF4bYRruMJ0VDAamlVCW8iz0IT4jTtDIdZV9a2zrWWI6PvHcaDlEJZMq\nVnYryBzNj69oKQ3E+cLA42MT+YldNWknSNwc7qgbLh8+2TDNuKGimLfYffUWwR50\nCO8DR5x/AgMBAAECggEAR9mHBUIYTgi/H0TXBQ5y9tmSxPWbHgM4gKpeIN+J81Kz\nDGj03nVYP3sbhGbN5M+zovvAw1CkHKYXmA0+C3+y0LI+MkTCYcYXIub2ZqDd/E55\nHA+wTSUzkQA4b7InPzcutItEE5ZgkOeztfWqBsTG+1/JKbd1CCH2oHDcivD++iyF\nALJmK/R6JPTuscH/Q6G4waIAmOzOrjYQXi/pYwHbhO9IJRddkmeO7T6G0LySavW9\nA8QF+3/PUjPchSxNVga646nPIXlSiHCKlkp+MgstzgCcj2bUWCgvdZRjDhrFIXTm\n6tBCGM+lNjLICEGOSWrY+tz4Sn31J75SUCuQuBMWFQKBgQD1cnf+XaPCW2yMj/Ph\nwgXtPIxs7NUAq3jsllszlpHNksjRukactSyz6329iS1L3UjvUGQtEjMnOCukuO6i\nIboBxnSrvF57CUQZWRG7ys9HCoTcAjb1GXcZp9PAvbRj3wUmR4sIK/5Ng8zzdKxi\nbDKksMfC3hjLnt0G8Wk1u/y9TQKBgQDBOU9Iq+he80a4oxBR9+rJjMQ3MPodgEwl\nvtICF/9cyu7OZrfp5cppnryUfVTPWrzi1lV3Mx9kBx01mlgDzke1JvXfLaz95rrp\nIK3EWXmN3M1ATfIZUyPeXW9eymEshVBhqAHncxWRpoCgxK9ciNzMRokjb0aiBAPg\nvB65qOkK+wKBgQDz1yjGl5ic+d65Njn/ypXAvipz/EUQSUn1INqyQZ/QL0c6tGh6\nPrOOeyGMLr/FYq2WsrMS48XV7MPO/bp1cDQul05JXvYuHWJ+HDK18iJCXXzoZXrb\nvNTJtCV2kgCoR2QCR4kkMTCPKaVvKDYqAXu+ibGrMqJHiCflQehX7c6E8QKBgAON\nfzSx3HrqdDFu5hzrtwhvqyfsoZyrQDstcAUT1eEp5gwrfVQyom8guQzt5QJPA8wT\n7sxbR0d6jgHvTZD8WPsutTSeTWD5vhQNQsSqdH60QZ3eEQaALden1iVjCThdVyYE\nhcxwpEPiUNkj5KmJ5q1m2pypLh5KfpvCObpmLarDAoGAA3nSjeAO4SxivL/Uz8fK\nZzdvWN4wvOwVjHSDLOMBlxZfPEhcD/1nmd1/+FFHB2NAiANFHMV/4f5skwzRPKCw\nDF+sK1vqiOAMsBWlGHboPhsMT2NNAPpjmuSh572DGndvpa0PwYasyyYM5wn0VcLE\npSzPHYyJhUXGfAX9KvDYQIo=\n-----END PRIVATE KEY-----\n",
+  "client_email": "hyperdic@hyperdic.iam.gserviceaccount.com",
+  "client_id": "102782507862335051605",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/hyperdic%40hyperdic.iam.gserviceaccount.com"
+}
